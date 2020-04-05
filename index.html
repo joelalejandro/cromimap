@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cromimap: Panel de prueba de color</title>
+
+    <meta name="description"
+        content="Esta herramienta permite simular a través de un panel de superficies irregulares la relación e interacción entre diversos colores. Es útil para medir contrastes y proporciones convenientes para usar el color en diversos espacios." />
+    <meta property="og:title" content="cromimap: Panel de prueba de color" />
+    <meta property="og:site_name" content="cromimap: Panel de prueba de color" />
+    <meta property="og:description"
+        content="Esta herramienta permite simular a través de un panel de superficies irregulares la relación e interacción entre diversos colores. Es útil para medir contrastes y proporciones convenientes para usar el color en diversos espacios." />
+    <meta property="og:url" content="https://cromimap.now.sh" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:image" content="https://cromimap.now.sh/android-chrome-192x192.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="cromimap: Panel de prueba de color" />
+    <meta name="twitter:description"
+        content="Esta herramienta permite simular a través de un panel de superficies irregulares la relación e interacción entre diversos colores. Es útil para medir contrastes y proporciones convenientes para usar el color en diversos espacios." />
+    <meta name="twitter:site" content="@joelalejandro" />
+    <meta name="twitter:creator" content="@joelalejandro" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <style>
+        * { box-sizing: border-box; }
+        #source { display: none; }
+        html, body { width: 100%; height: 100%; margin: 0; padding: 0; font-family: sans-serif; }
+        body {display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #results { flex: 1; }
+        svg { height: 100%; }
+        header { padding: 1rem; background: #000; width: 100%; height: 5rem; display: flex; justify-content: center; color: #fff; align-items: center; }
+        button { background: #fff; border: 1px solid #000; height: 100%; }
+        input[type="color"] { height: 100%; }
+        h1 { padding-right: 1rem; }
+        p { font-size: 0.85rem; width: 50%; margin-left: 1rem; }
+        footer { padding: 1rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>cromimap</h1>
+        <input type="color" class="color" value="#333333">
+        <input type="color" class="color" value="#666666">
+        <input type="color" class="color" value="#999999">
+        <input type="color" class="color" value="#CCCCCC">
+        <button id="inspire">dame colores</button>
+        <p>
+            Esta herramienta permite simular a través de un panel de superficies irregulares
+            la relación e interacción entre diversos colores. Es útil para medir contrastes
+            y proporciones convenientes para usar el color en diversos espacios.
+        </p>
+    </header>
+
+    <main id="results">
+    </main>
+
+    <footer>
+        Hecho con 💜 por <a href="https://twitter.com/joelalejandro" target="_blank">@joelalejandro</a> | <a href="https://github.com/joelalejandro/chromimap" target="_blank">¿Sugerencias? Proponelas en GitHub</a>
+    </footer>
+
+    <div id="source">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            width="272.7px" height="383.1px" viewBox="0 0 272.7 383.1" style="enable-background:new 0 0 272.7 383.1;"
+            xml:space="preserve">
+            <path class="shape1" d="M83.1,80.2L0,118.1c0,0,21.2,104.3,27.1,108.2c5.9,4,66.1,73,66.1,73L19.8,347l52,33.3l119.8,2.9l76.3-19
+            L252,268.8l-50.3-30.5l70.9-53.6l-41-146.3L158.8,0L83.1,80.2z" />
+            <path class="shape2" d="M89.5,167l46-40.4c0,0,24.8-26.9,28.6-26.6c3.8,0.3,59.5,69.6,59.5,69.6l-41.7,49l-26,26l12.8,53.4l58.2,33.5
+            l-83.5,25.3c0,0-30.7-54.4-29.1-54.4c1.6,0-33.5-65.5-33.5-65.5l-34.8-33.2L89.5,167z" />
+            <polygon class="shape4" points="27.2,155.1 65.8,135.5 79.1,151.5 48.1,174.7 " />
+            <polygon class="shape3" points="88.6,146.2 79.1,112.7 160.1,26.7 251.1,151.5 176.5,94.9 148.7,77.2 124,122.8 " />
+        </svg>
+    </div>
+    <script>
+        const shapeContainerTemplate = document.querySelector("#source svg");
+        const panelize = () => {
+            const results = document.querySelector("#results");
+            results.innerHTML = "";
+
+            const colorInputs = [...document.querySelectorAll(".color")].map(c => c.value);
+
+            for (let c = 0; c < colorInputs.length; c += 1) {
+                const colors = colorInputs.slice(c).concat(colorInputs.slice(0, c));
+                console.log(colors);
+                const shapeContainer = shapeContainerTemplate.cloneNode(true);
+                shapeContainer.innerHTML = shapeContainer.innerHTML
+                    .replace(/shape1/g, `shape1${c}`)
+                    .replace(/shape2/g, `shape2${c}`)
+                    .replace(/shape3/g, `shape3${c}`)
+                    .replace(/shape4/g, `shape4${c}`);
+                const styleNode = document.createElement("style");
+                const pathOrPolygon = shapeContainer.querySelector("path, polygon");
+                styleNode.innerText = colors.map((color, index) => `.shape${index + 1}${c} { fill: ${color} }`).join("\n");
+                shapeContainer.insertBefore(styleNode, pathOrPolygon);
+                results.appendChild(shapeContainer);
+            }
+        }
+
+        panelize();
+
+        document.querySelector("header").addEventListener("change", ({ target }) => {
+            if (target.getAttribute("type") !== "color") {
+                return;
+            }
+
+            panelize();
+        });
+
+        document.querySelector("#inspire").addEventListener("click", () => {
+            const colors = [];
+            for (c = 0; c < 4; c += 1) {
+                colors[c] = [];
+                for (i = 0; i < 3; i += 1) {
+                    colors[c][i] = Math.ceil(Math.random() * 255).toString(16).padStart(2, "0");
+                }
+                document.querySelector(`input[type='color']:nth-of-type(${c + 1}`).value = `#${colors[c].join("")}`;
+            }
+            panelize();
+        });
+    </script>
+</body>
+</html>
